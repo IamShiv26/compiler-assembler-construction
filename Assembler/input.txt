@@ -1,0 +1,27 @@
+pgm1 start 0
+using *,15
+la 15,setup
+sr total,total
+ac equ 2
+index equ 3
+total equ 4
+database equ 13
+setup equ *
+using setup,15
+l database,=A(data1)
+using dataarea,database
+sr index,index
+loop l ac,data1(index)
+ar total,ac
+a ac,=f'5'
+st ac,save(index)
+a index,=f'4'
+c index,=f'8000'
+bne loop
+lr 1,total
+br 14
+ltorg
+save ds 2000f
+dataarea equ *
+data1 dc f'23,26,97,101,120'
+end
