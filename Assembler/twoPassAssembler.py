@@ -1,5 +1,5 @@
 import re
-
+import time
 def pass1():
   g = open("input.txt","r")
   s = g.read()
@@ -41,7 +41,7 @@ def pass2():
     line_no=line_no+1
 
 def searchInPOT1(w1):
-  global lc
+  global lc,intnums
   w = w1.split(" ")
   k=0
   if(len(w)==3):
@@ -59,14 +59,18 @@ def searchInPOT1(w1):
       #F at the end
       l = int(x[:len(x)-1])
       l =l*4
+      lcstore["ds"]=lc
       lc = lc+l
     else:
       #F at the start
-      nums = x[index+1:len(x)]
+      nums = x[index+2:len(x)-1]
       intnums = nums.split(",")
       lclist.append(lc)
+      lcstore["dc"]=[]
+      print(len(intnums))
       for e in range(len(intnums)):
         lclist.append(lc)
+        lcstore["dc"].append(lc)
         lc=lc+4
     return True
   elif(w[k]=="equ"):
@@ -148,6 +152,7 @@ def ltorg(isnotEnd):
     lclist.append(lc)
 
 def searchInPOT2(w3):
+  lc4=0
   if(w3.find("using")!=-1):
     we1 = re.split(r'[,\s]\s*', w3)
     if(we1[1]=="*"):
@@ -164,16 +169,26 @@ def searchInPOT2(w3):
   if(len(we1)==3):
     k=1
   if(we1[k]=="ds"):
-    
+    out=str(lcstore["ds"]) + " ----"
+    f1.write(out)
+    f1.write("\n")
     return True
   elif(we1[k]=="dc"):
-    
+    for r in range(len(lcstore["dc"])):
+      out = str(lcstore["dc"][r]) + " "+intnums[r]
+      f1.write(out)
+      f1.write("\n")
     return True
   elif(we1[k]=="equ"):
     return True
   elif(we1[k]=="start"):
     return True
   elif(we1[k]=="ltorg"):
+    for key,v in lit.items():
+      lc4=lclist[line_no]
+      out = str(v["value"]) + " " + str(key)
+      f1.write(out)
+      f1.write("\n")
     return True
   elif(we1[k]=="end"):
     return True
@@ -249,7 +264,6 @@ def createOffset(s):
   index=0
   value=-1
   index_reg=0
-  print(s)
   if(s[0]=="="):
     value=getLitValue(s[1:len(s)])
     #print(value)
@@ -336,14 +350,18 @@ lc=0
 sym = dict()
 lit=dict()
 lclist = list()
+lcstore=dict()
+litLtorg=list()
+intnums=[]
 baset = [-1]*15
 line_no=0
+init=time.time()
 pass1()
 f1=open("outputpass2.txt","w")
 lclist1=sorted(list(set(lclist)))
-print(lclist1)
 lc2=0
 pass2()
+final=time.time()
+print("Time Required : ",final-init)
 f1.close()
-print(baset)
 
